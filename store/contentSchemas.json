@@ -35,10 +35,7 @@
         "analyticsProperties": {
           "title": "admin/editor.image.analytics.title",
           "description": "admin/editor.image.analytics.description",
-          "enum": [
-            "none",
-            "provide"
-          ],
+          "enum": ["none", "provide"],
           "enumNames": [
             "admin/editor.image.analytics.none",
             "admin/editor.image.analytics.provide"
@@ -55,9 +52,7 @@
             {
               "properties": {
                 "analyticsProperties": {
-                  "enum": [
-                    "provide"
-                  ]
+                  "enum": ["provide"]
                 },
                 "promotionId": {
                   "title": "admin/editor.image.analytics.promotionId",
@@ -79,9 +74,7 @@
             {
               "properties": {
                 "analyticsProperties": {
-                  "enum": [
-                    "none"
-                  ]
+                  "enum": ["none"]
                 }
               }
             }
@@ -101,6 +94,11 @@
             "widget": {
               "ui:widget": "image-uploader"
             }
+          },
+          "imageProtocolId": {
+            "$ref": "app:vtex.native-types#/definitions/text",
+            "default": "",
+            "title": "admin/editor.image-list.images.imageProtocolId.title"
           },
           "mobileImage": {
             "$ref": "app:vtex.native-types#/definitions/url",
@@ -134,10 +132,7 @@
           "analyticsProperties": {
             "title": "admin/editor.image.analytics.title",
             "description": "admin/editor.image.analytics.description",
-            "enum": [
-              "none",
-              "provide"
-            ],
+            "enum": ["none", "provide"],
             "enumNames": [
               "admin/editor.image.analytics.none",
               "admin/editor.image.analytics.provide"
@@ -160,9 +155,7 @@
               {
                 "properties": {
                   "analyticsProperties": {
-                    "enum": [
-                      "provide"
-                    ]
+                    "enum": ["provide"]
                   },
                   "promotionId": {
                     "title": "admin/editor.image.analytics.promotionId",
@@ -184,9 +177,7 @@
               {
                 "properties": {
                   "analyticsProperties": {
-                    "enum": [
-                      "none"
-                    ]
+                    "enum": ["none"]
                   }
                 }
               }

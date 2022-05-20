@@ -1,10 +1,6 @@
 /* eslint-disable no-console */
 import React, { Fragment, useState, useRef, useEffect } from 'react'
-<<<<<<< HEAD
 import { useLazyQuery } from 'react-apollo'
-=======
-import { useQuery } from 'react-apollo'
->>>>>>> b5be315 (first commit customDropdown)
 import type { ImgHTMLAttributes, RefObject } from 'react'
 import { useOnView } from 'vtex.on-view'
 import { useCssHandles } from 'vtex.css-handles'
@@ -13,7 +9,7 @@ import { useIntl, defineMessages } from 'react-intl'
 import { formatIOMessage } from 'vtex.native-types'
 import { Link } from 'vtex.render-runtime'
 import { usePixel } from 'vtex.pixel-manager'
-import type { SessionSuccess } from 'vtex.session-client'
+// import type { SessionSuccess } from 'vtex.session-client'
 import { useRenderSession } from 'vtex.session-client'
 
 import { usePosition } from './hooks/usePosition'
@@ -176,7 +172,6 @@ function Image(props: ImageProps) {
   ) {
     const { urlMobile, url, hrefImg } = imageData.getImage
 
-    console.log('inside if: ', url, urlMobile, hrefImg)
     if (isMobile) {
       formattedSrc = formatIOMessage({ id: urlMobile, intl })
     } else {
