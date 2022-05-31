@@ -61,28 +61,28 @@ Note that the `slider-layout` block, exported from the Slider Layout app, is giv
 
 ### `list-context.image-list` props
 
-| Prop name | Type     | Description                                                   | Default value |
-| --------- | -------- | ------------------------------------------------------------- | ------------- |
-| `images`  | `array`  | Array of objects declaring all desired images to be rendered. | `undefined`   |
-| `height`  | `number` | Image height for all images declared in the `image` object (in `px`).   | `undefined`   |
-| `preload`  | `boolean` | Preloads the first image in a list, which helps prioritizing the display of images over other assets | `false`   |
+| Prop name | Type      | Description                                                                                          | Default value |
+| --------- | --------- | ---------------------------------------------------------------------------------------------------- | ------------- |
+| `images`  | `array`   | Array of objects declaring all desired images to be rendered.                                        | `undefined`   |
+| `height`  | `number`  | Image height for all images declared in the `image` object (in `px`).                                | `undefined`   |
+| `preload` | `boolean` | Preloads the first image in a list, which helps prioritizing the display of images over other assets | `false`       |
 
 ### `image-list` props
 
-| Prop name | Type     | Description                                                   | Default value |
-| --------- | -------- | ------------------------------------------------------------- | ------------- |
-| `images`  | `array`  | Array of objects declaring all desired images to be rendered. | `undefined`   |
-| `height`  | `number` | Image height for all images declared in the `image` object (in `px`).   | `undefined`   |
+| Prop name | Type     | Description                                                           | Default value |
+| --------- | -------- | --------------------------------------------------------------------- | ------------- |
+| `images`  | `array`  | Array of objects declaring all desired images to be rendered.         | `undefined`   |
+| `height`  | `number` | Image height for all images declared in the `image` object (in `px`). | `undefined`   |
 
 - **`images` array:**
 
-| Prop name     | Type     | Description                               | Default value |
-| ------------- | -------- | ----------------------------------------- | ------------- |
-| `image`       | `string` | Image URL.                                | `undefined`   |
-| `mobileImage` | `string` | Mobile image URL.                         | `undefined`   |
-| `description` | `string` | Image description.                        | `undefined`   |
-| `link`        | `object` | Links an URL to the image being rendered. | `undefined`   |
-| `width` | `string` / `number` | Image width (in `%` or `px`). | `100%` |
+| Prop name     | Type                | Description                               | Default value |
+| ------------- | ------------------- | ----------------------------------------- | ------------- |
+| `image`       | `string`            | Image URL.                                | `undefined`   |
+| `mobileImage` | `string`            | Mobile image URL.                         | `undefined`   |
+| `description` | `string`            | Image description.                        | `undefined`   |
+| `link`        | `object`            | Links an URL to the image being rendered. | `undefined`   |
+| `width`       | `string` / `number` | Image width (in `%` or `px`).             | `100%`        |
 
 - **`link` object:**
 
@@ -102,8 +102,10 @@ The block still doesn't have CSS Handles for its specific customization.
 All CSS Handles available for the Image block are the ones available for the `slider-layout` block. Take a look at the Customization section in the [**Slider Layout documentation**](https://vtex.io/docs/app/vtex.slider-layout).
 Note that the `image-slider` uses our `vtex.slider-layout` app, so all the CSS namespaces defined by it are also available for `image-slider`. Take a look at [Slider-Layout](https://vtex.io/docs/app/vtex.slider-layout).
 
-## Implementing Image Protocol 
+## Implementing Image Protocol
+
 The Image Protocol is an app that displays personalized images to use alongside the Store Image app in your store's images. Follow the steps below to implement the Image Protocol in your code.
+
 1. In your theme's `manifest.json`, add the Session Client app and also the Image Protocol app as a dependency:
 
 ```json
@@ -112,6 +114,7 @@ The Image Protocol is an app that displays personalized images to use alongside 
     "vtex.image-protocol": "1.x"
   }
 ```
+
 The interface `ImageTypes.ts` is modified to have the isMobile and imageProtocolId props:
 
 ```ts
@@ -121,7 +124,8 @@ export interface ImageSchema {
   ...
 }
 ```
-2. To personalize a specific image, the props defined in the interface must be exposed in the Image component as the example below: 
+
+2. To personalize a specific image, the props defined in the interface must be exposed in the Image component as the example below:
 
 ```tsx
 const{
@@ -129,16 +133,17 @@ const{
   imageProtocolId='',
   ...
 }=props
-``` 
+```
 
->**NOTE**: The prop imageProtocolId can be modified from the Site Editor.
+> **NOTE**: The prop imageProtocolId can be modified from the Site Editor.
 
 To implement the URLs from the image protocol example we have created inside the `react/graphql` the `getImgUrl.gql` that will use the resolver in the `image-protocol` app.
 
 ```graphql
 query getImage($userId: String!, $imageProtocolId: String!) {
-    getImage(userId: $userId, imageProtocolId: $imageProtocolId) @context(provider: "vtex.image-protocol"){
-    url,
+  getImage(userId: $userId, imageProtocolId: $imageProtocolId)
+    @context(provider: "vtex.image-protocol") {
+    url
     urlMobile
   }
 }
@@ -154,7 +159,7 @@ import { SessionSuccess, useRenderSession } from 'vtex.session-client'
 ```
 
 > ⚠️
-> 
+>
 > As the Image component has the `imageProtocolId` prop if it has an Id, you can get the user Id and use the query defined in `getImgUrl.gql` that receives these two variables. If no user id or imageProtocolId is provided, skip this suggestion.
 
 We set the src for this imgElement depending on the response of the query and also if this is for mobile or not. Other image elements that don't have the image protocol Id or the result of the query has the URLs as null we then set the default URLs.

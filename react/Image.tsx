@@ -123,7 +123,7 @@ function Image(props: ImageProps) {
 
   const placeholderSize = height ?? minHeight ?? maxHeight ?? 'auto'
 
-  // Image Protocol Start
+  // Image Protocol START
 
   const { session } = useRenderSession()
   const { latitude, longitude, error: positionError } = usePosition()
@@ -172,6 +172,7 @@ function Image(props: ImageProps) {
   ) {
     const { urlMobile, url, hrefImg } = imageData.getImage
 
+    console.log('inside if: ', url, urlMobile, hrefImg)
     if (isMobile) {
       formattedSrc = formatIOMessage({ id: urlMobile, intl })
     } else {
