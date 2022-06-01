@@ -1,7 +1,11 @@
 {
   "vendor": "vtex",
   "name": "store-image",
+<<<<<<< HEAD
   "version": "0.15.0",
+=======
+  "version": "0.14.2",
+>>>>>>> f583eeb (change manifest)
   "title": "VTEX Image",
   "description": "Set of VTEX components to handle images",
   "builders": {
