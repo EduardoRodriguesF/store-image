@@ -151,8 +151,145 @@ function Image(props: ImageProps) {
   let imgElement
   let formattedSrc
   let formattedAlt
+<<<<<<< HEAD
   let formattedLink
   let maybeLink
+=======
+
+  const { loading, error, data } = useQuery(query, {
+    variables: { userId, imageProtocolId },
+    skip: !userId,
+  })
+
+  if (loading) {
+    imgElement = <div>{'Loading…'}</div>
+  }
+
+  if (error) {
+    imgElement = <div>{`Error ${error}`}</div>
+  }
+<<<<<<< HEAD
+  const { push } = usePixel()
+  const promotionEventData =
+    analyticsProperties === 'provide'
+      ? {
+          id: promotionId,
+          name: promotionName,
+          creative: formattedSrc,
+          position: promotionPosition,
+        }
+      : undefined
+
+  if (
+    imageData?.getImage &&
+    imageData.getImage.url !== null &&
+    imageData.getImage.urlMobile !== null
+  ) {
+    const { urlMobile, url, hrefImg } = imageData.getImage
+
+    console.log('inside if: ', url, urlMobile, hrefImg)
+    if (isMobile) {
+      formattedSrc = formatIOMessage({ id: urlMobile, intl })
+    } else {
+      formattedSrc = formatIOMessage({ id: data.getImage.url, intl })
+=======
+  if (data && data.getImage.url !== null && data.getImage.urlMobile !== null && imageProtocolId !== '') {
+    // eslint-disable-next-line no-console
+    console.log('imageProtocolId: ',imageProtocolId)
+    if(isMobile){
+      formattedSrc = formatIOMessage({ id: data.getImage.urlMobile, intl })
+      // eslint-disable-next-line no-console
+      console.log('urlMobile: ',data.getImage.urlMobile)
+    }else{
+    } else {
+      formattedSrc = formatIOMessage({ id: data.getImage.url, intl })
+      // eslint-disable-next-line no-console
+      console.log('urlDesktop: ',data.getImage.url)
+>>>>>>> 10dfc0d (console logs)
+      formattedSrc = formatIOMessage({ id: url, intl })
+    }
+
+    formattedAlt = formatIOMessage({ id: alt, intl })
+    formattedLink = formatIOMessage({ id: hrefImg, intl })
+
+    // Image Protocol END
+
+    imgElement = (
+      <img
+        title={title}
+        sizes={sizes}
+        srcSet={srcSet}
+        src={typeof formattedSrc === 'string' ? formattedSrc : ''}
+        alt={typeof formattedAlt === 'string' ? formattedAlt : ''}
+        style={imageDimensions}
+        ref={imageRef}
+        className={handles.imageElement}
+        {...(preload
+          ? {
+              'data-vtex-preload': 'true',
+            }
+          : {})}
+      />
+    )
+    const shouldOpenLinkInNewTab = link?.newTab ?? link?.openNewTab
+
+    const formattedTitle = formatIOMessage({ id: link?.attributeTitle, intl })
+
+    maybeLink = hrefImg ? (
+      // eslint-disable-next-line jsx-a11y/anchor-is-valid
+      <Link
+        to={typeof formattedLink === 'string' ? formattedLink : ''}
+        title={typeof formattedTitle === 'string' ? formattedTitle : ''}
+        rel={link?.attributeNofollow ? 'nofollow' : ''}
+        target={shouldOpenLinkInNewTab ? '_blank' : undefined}
+        className={handles.imageElementLink}
+        onClick={() => {
+          if (analyticsProperties === 'none') return
+          push({ event: 'promotionClick', promotions: [promotionEventData] })
+        }}
+      >
+        {imgElement}
+      </Link>
+    ) : (
+      <Fragment>{imgElement}</Fragment>
+    )
+  } else {
+<<<<<<< HEAD
+=======
+    // eslint-disable-next-line no-console
+    console.log('inside else imageProtocolId: ',imageProtocolId)
+>>>>>>> 10dfc0d (console logs)
+    formattedSrc = formatIOMessage({ id: src, intl })
+    console.log('else src:', formattedSrc)
+    formattedAlt = formatIOMessage({ id: alt, intl })
+
+    imgElement = (
+      <img
+        title={title}
+        sizes={sizes}
+        srcSet={srcSet}
+        src={typeof formattedSrc === 'string' ? formattedSrc : ''}
+        alt={typeof formattedAlt === 'string' ? formattedAlt : ''}
+        style={imageDimensions}
+        ref={imageRef}
+        className={handles.imageElement}
+        {...(preload
+          ? {
+              'data-vtex-preload': 'true',
+            }
+          : {})}
+      />
+    )
+
+    formattedLink = formatIOMessage({ id: link?.url, intl })
+    const formattedTitle = formatIOMessage({ id: link?.attributeTitle, intl })
+
+  /**
+   * To understand why we need to check for both newTab and openNewTab
+   * properties, check the Image type definition at './typings/image.d.ts'.
+   */
+  const shouldOpenLinkInNewTab = link?.newTab ?? link?.openNewTab
+>>>>>>> 1c0f487 (console logs)
 
   const { push } = usePixel()
   const promotionEventData =
