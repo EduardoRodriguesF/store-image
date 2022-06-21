@@ -151,8 +151,80 @@ function Image(props: ImageProps) {
   let imgElement
   let formattedSrc
   let formattedAlt
+<<<<<<< HEAD
   let formattedLink
   let maybeLink
+=======
+
+  const { loading, error, data } = useQuery(query, {
+    variables: { userId, imageProtocolId },
+    skip: !userId,
+  })
+
+  if (
+    !error &&
+    !loading &&
+    data &&
+    data.getImage &&
+    data.getImage.url !== null &&
+    data.getImage.urlMobile !== null &&
+    imageProtocolId !== ''
+  ) {
+    // eslint-disable-next-line no-console
+    console.log('imageProtocolId: ', imageProtocolId)
+    if (isMobile) {
+      formattedSrc = formatIOMessage({ id: data.getImage.urlMobile, intl })
+    } else {
+      formattedSrc = formatIOMessage({ id: data.getImage.url, intl })
+    }
+
+    formattedAlt = formatIOMessage({ id: alt, intl })
+
+    imgElement = (
+      <img
+        title={title}
+        sizes={sizes}
+        srcSet={srcSet}
+        src={typeof formattedSrc === 'string' ? formattedSrc : ''}
+        alt={typeof formattedAlt === 'string' ? formattedAlt : ''}
+        style={imageDimensions}
+        ref={imageRef}
+        className={handles.imageElement}
+        {...(preload
+          ? {
+              'data-vtex-preload': 'true',
+            }
+          : {})}
+      />
+    )
+  } else {
+    formattedSrc = formatIOMessage({ id: src, intl })
+    formattedAlt = formatIOMessage({ id: alt, intl })
+    imgElement = (
+      <img
+        title={title}
+        sizes={sizes}
+        srcSet={srcSet}
+        src={typeof formattedSrc === 'string' ? formattedSrc : ''}
+        alt={typeof formattedAlt === 'string' ? formattedAlt : ''}
+        style={imageDimensions}
+        ref={imageRef}
+        className={handles.imageElement}
+        {...(preload
+          ? {
+              'data-vtex-preload': 'true',
+            }
+          : {})}
+      />
+    )
+  }
+
+  /**
+   * To understand why we need to check for both newTab and openNewTab
+   * properties, check the Image type definition at './typings/image.d.ts'.
+   */
+  const shouldOpenLinkInNewTab = link?.newTab ?? link?.openNewTab
+>>>>>>> 50df632 (validation)
 
   const { push } = usePixel()
   const promotionEventData =
