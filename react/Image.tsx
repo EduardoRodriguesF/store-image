@@ -12,9 +12,9 @@ import { usePixel } from 'vtex.pixel-manager'
 // import type { SessionSuccess } from 'vtex.session-client'
 import { useRenderSession } from 'vtex.session-client'
 
-import { usePosition } from './hooks/usePosition'
 import type { ImageSchema } from './ImageTypes'
 import GET_IMAGE_PROTOCOL_QUERY from './graphql/getImgUrl.gql'
+import { usePosition } from './hooks/usePosition'
 
 const CSS_HANDLES = ['imageElement', 'imageElementLink'] as const
 
@@ -122,11 +122,11 @@ function Image(props: ImageProps) {
   }
 
   const placeholderSize = height ?? minHeight ?? maxHeight ?? 'auto'
-  const userId = ''
 
   // Image Protocol Start
 
   const { session } = useRenderSession()
+
   const { latitude, longitude, error: positionError } = usePosition()
 
   const [getPersonalizedImages, { data: imageData }] = useLazyQuery(
@@ -173,6 +173,7 @@ function Image(props: ImageProps) {
   ) {
     const { urlMobile, url, hrefImg } = imageData.getImage
 
+    console.log('inside if: ', url, urlMobile, hrefImg)
     if (isMobile) {
       formattedSrc = formatIOMessage({ id: urlMobile, intl })
     } else {
@@ -226,6 +227,7 @@ function Image(props: ImageProps) {
   } else {
     formattedSrc = formatIOMessage({ id: src, intl })
     formattedAlt = formatIOMessage({ id: alt, intl })
+    console.log('src: ', src)
 
     imgElement = (
       <img
