@@ -62,9 +62,6 @@ const IMAGE_LIST_MESSAGES = defineMessages({
   analyticsPromotionPosition: {
     id: 'admin/editor.image.analytics.promotionPosition',
   },
-  imagesImageProtocolId: {
-    id: 'admin/editor.image-list.images.imageProtocolId.title',
-  },
   imagesImageProtocolIdDescription: {
     id: 'admin/editor.image-list.images.imageProtocolId.description',
   },

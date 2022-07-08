@@ -74,17 +74,6 @@ const useImageLoad = (
   return isLoaded
 }
 
-const handleSuccess = async (position: any) => {
-  const { latitude, longitude } = position.coords
-
-  console.log(`longitud:${longitude} latitud:${latitude}`)
-}
-
-const handleError = () => {
-  console.log('error')
-  /* get geolocation from user IP address?? */
-}
-
 function Image(props: ImageProps) {
   const {
     isMobile = false,
@@ -133,8 +122,9 @@ function Image(props: ImageProps) {
   }
 
   const placeholderSize = height ?? minHeight ?? maxHeight ?? 'auto'
+  const userId = ''
 
-  // Image Protocol START
+  // Image Protocol Start
 
   const { session } = useRenderSession()
   const { latitude, longitude, error: positionError } = usePosition()
