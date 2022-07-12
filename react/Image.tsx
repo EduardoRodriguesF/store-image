@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 import React, { Fragment, useState, useRef, useEffect } from 'react'
-import { useQuery } from 'react-apollo'
+import { useLazyQuery } from 'react-apollo'
 import type { ImgHTMLAttributes, RefObject } from 'react'
 import { useOnView } from 'vtex.on-view'
 import { useCssHandles } from 'vtex.css-handles'
@@ -9,11 +9,12 @@ import { useIntl, defineMessages } from 'react-intl'
 import { formatIOMessage } from 'vtex.native-types'
 import { Link } from 'vtex.render-runtime'
 import { usePixel } from 'vtex.pixel-manager'
-import type { SessionSuccess } from 'vtex.session-client'
+// import type { SessionSuccess } from 'vtex.session-client'
 import { useRenderSession } from 'vtex.session-client'
 
+import { usePosition } from './hooks/usePosition'
 import type { ImageSchema } from './ImageTypes'
-import GET_IMAGE_PROTOCOL_IMAGES from './graphql/getImgUrl.gql'
+import GET_IMAGE_PROTOCOL_QUERY from './graphql/getImgUrl.gql'
 
 const CSS_HANDLES = ['imageElement', 'imageElementLink'] as const
 
@@ -73,17 +74,6 @@ const useImageLoad = (
   return isLoaded
 }
 
-const handleSuccess = async (position: any) => {
-  const { latitude, longitude } = position.coords
-
-  console.log(`longitud:${longitude} latitud:${latitude}`)
-}
-
-const handleError = () => {
-  console.log('error')
-  /* get geolocation from user IP address?? */
-}
-
 function Image(props: ImageProps) {
   const {
     isMobile = false,
@@ -132,46 +122,37 @@ function Image(props: ImageProps) {
   }
 
   const placeholderSize = height ?? minHeight ?? maxHeight ?? 'auto'
-  let userId = ''
+
+  // Image Protocol Start
+
+  const { session } = useRenderSession()
+  const { latitude, longitude, error: positionError } = usePosition()
+
+  const [getPersonalizedImages, { data: imageData }] = useLazyQuery(
+    GET_IMAGE_PROTOCOL_QUERY,
+    {
+      ssr: false,
+    }
+  )
 
   useEffect(() => {
-    navigator.geolocation.getCurrentPosition(handleSuccess, handleError)
-  }, [])
+    if (session && imageProtocolId && positionError !== undefined) {
+      getPersonalizedImages({
+        variables: {
+          userId: session?.namespaces?.profile?.id?.value,
+          imageProtocolId,
+          latitude,
+          longitude,
+        },
+      })
+    }
+  }, [positionError, session, imageProtocolId])
 
-  const { loading: loading2, session, error: error2 } = useRenderSession()
-
-  if (session) {
-    const {
-      namespaces: { profile },
-    } = session as SessionSuccess
-
-    userId = profile?.id?.value
-  }
-
-  console.log('session: ', session)
-  console.log('image protocol id:', imageProtocolId)
-  console.log('userId: ', userId)
-  if (loading2) {
-    // eslint-disable-next-line no-console
-    console.log('loading')
-  }
-
-  if (error2) {
-    // eslint-disable-next-line no-console
-    console.log('error: ', error2)
-  }
-
-  const query = GET_IMAGE_PROTOCOL_IMAGES
   let imgElement
   let formattedSrc
   let formattedAlt
   let formattedLink
   let maybeLink
-  const { loading, error, data } = useQuery(query, {
-    variables: { userId, imageProtocolId },
-    skip: !userId || !imageProtocolId,
-    ssr: false,
-  })
 
   const { push } = usePixel()
   const promotionEventData =
@@ -184,30 +165,19 @@ function Image(props: ImageProps) {
         }
       : undefined
 
-  if (
-    !error &&
-    !loading &&
-    data &&
-    data.getImage &&
-    data.getImage.url !== null &&
-    data.getImage.urlMobile !== null &&
-    imageProtocolId !== ''
-  ) {
-    console.log('data: ', data.getImage)
-    console.log('imageProtocolId: ', imageProtocolId)
+  if (imageData?.getImage) {
+    const { urlMobile, url, hrefImg } = imageData.getImage
 
     if (isMobile) {
-      formattedSrc = formatIOMessage({ id: data.getImage.urlMobile, intl })
-      // eslint-disable-next-line no-console
-      console.log('urlMobile: ', data.getImage.urlMobile)
+      formattedSrc = formatIOMessage({ id: urlMobile, intl })
     } else {
-      formattedSrc = formatIOMessage({ id: data.getImage.url, intl })
-      // eslint-disable-next-line no-console
-      console.log('urlDesktop: ', data.getImage.url)
+      formattedSrc = formatIOMessage({ id: url, intl })
     }
 
     formattedAlt = formatIOMessage({ id: alt, intl })
-    formattedLink = formatIOMessage({ id: data.getImage.hrefImg, intl })
+    formattedLink = formatIOMessage({ id: hrefImg, intl })
+
+    // Image Protocol END
 
     imgElement = (
       <img
@@ -230,7 +200,7 @@ function Image(props: ImageProps) {
 
     const formattedTitle = formatIOMessage({ id: link?.attributeTitle, intl })
 
-    maybeLink = data.getImage.hrefImg ? (
+    maybeLink = hrefImg ? (
       // eslint-disable-next-line jsx-a11y/anchor-is-valid
       <Link
         to={typeof formattedLink === 'string' ? formattedLink : ''}
@@ -249,13 +219,9 @@ function Image(props: ImageProps) {
       <Fragment>{imgElement}</Fragment>
     )
   } else {
-    // eslint-disable-next-line no-console
-    console.log('error: ', error)
-    console.log('loading', loading)
-    console.log('inside else imageProtocolId: ', imageProtocolId)
     formattedSrc = formatIOMessage({ id: src, intl })
     formattedAlt = formatIOMessage({ id: alt, intl })
-    console.log('src: ', src)
+
     imgElement = (
       <img
         title={title}
