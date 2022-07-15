@@ -165,9 +165,14 @@ function Image(props: ImageProps) {
         }
       : undefined
 
-  if (imageData?.getImage) {
+  if (
+    imageData?.getImage &&
+    imageData.getImage.url !== null &&
+    imageData.getImage.urlMobile !== null
+  ) {
     const { urlMobile, url, hrefImg } = imageData.getImage
 
+    console.log('inside if: ', url, urlMobile, hrefImg)
     if (isMobile) {
       formattedSrc = formatIOMessage({ id: urlMobile, intl })
     } else {
@@ -220,6 +225,7 @@ function Image(props: ImageProps) {
     )
   } else {
     formattedSrc = formatIOMessage({ id: src, intl })
+    console.log('else src:', formattedSrc)
     formattedAlt = formatIOMessage({ id: alt, intl })
 
     imgElement = (
