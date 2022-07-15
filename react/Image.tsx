@@ -226,6 +226,7 @@ function Image(props: ImageProps) {
     )
   } else {
     formattedSrc = formatIOMessage({ id: src, intl })
+    console.log('else src:', formattedSrc)
     formattedAlt = formatIOMessage({ id: alt, intl })
     console.log('src: ', src)
 
