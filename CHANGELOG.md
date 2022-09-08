@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Conditional logic to display specific URLs in a specific image component if the image protocol is being used
 
 - Image Protocol Implementation
+- Support for `experimentalPreventLayoutShift` prop in `ImageList` which will apply the setting to all child images
 
 ## [0.14.2] - 2021-10-13
 ### Fixed
